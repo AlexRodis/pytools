@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytools"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["data", "analysis", "science", "tools", "bayesian", "inference",
+"statistics", "machine", "learning"]
+lincense = {text="Apache-2.0"}
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"Operating System :: OS independent"
+]
+
+dependencies = [
+	"pymc",
+	"plotly",
+	"matplotlib",
+	"scikit-learn",
+	"umap-learn",
+	"seaborn",
+	"arviz"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/AlexRodis/pytools"
+"Bug Tracker" = "https://github.com/AlexRodis/pytools/issues"
+# Unused
+"Documentation" = "https://readthedocs.org/projects/pytools/"
+
+
+dynamic = ["version"]
+
+[project.optional-dependencies]
+
+GPU = ["jax[cuda12_pip]"]
+DATABASES = ["django"]
+
+
+

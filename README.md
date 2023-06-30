@@ -1,2 +1,4 @@
 # pytools
-Personal python library for data analysis tools
+
+A personal python library aggragating various tools written
+for data analysis tasks
