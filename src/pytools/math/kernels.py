@@ -1,15 +1,32 @@
+#   Copyright 2023 Alexander Rodis
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This module contains additional math functions and definitions, mostly
+# related to neural network activations / transfer functions.
+# The following functions are implemented:
+# - ReLu := Rectified Linear Units, parametric or Leaky
+# - ELU
+# - | SWISS := The swiss activation function, with fixed non learnable
+#     parameter. More accuratly "SWISS-1"
+# - GELU 
+# - SiLU
 import pytensor
 import numpy as np 
 import pytensor.tensor as at # For backwards compatibility reasons
 from pymc.gp.cov import Covariance
 import typing
 
-# Feature Implementation Note: The original code implements Automatic
-# Relevance Determination (ARD). It would be interesting to see if this
-# can be implemented in a Bayesian framework
-
-# Maintenance Note: This was written the `aesara` as the `pymc` backend.
-# Need to update it to `pytensor` backend
 
 class MultiLayerPerceptronKernel(Covariance):
     '''
@@ -110,25 +127,25 @@ class MultiLayerPerceptronKernel(Covariance):
     
     def _comp_prod(self, X, X2=None):
         if X2 is None:
-            return (at.math.square(X)*self.weight_variance
+            return (at.math.square(X[:,self.active_dims])*self.weight_variance
             ).sum(axis=1)+self.bias_variance
         else:
-            return (X*self.weight_variance).dot(X2.T)+self.bias_variance
+            return (X[:,self.active_dims]*self.weight_variance).dot(X2[:,self.active_dims].T)+self.bias_variance
     
     def diag(self, X):
         """Compute the diagonal of the covariance matrix for X."""
-        X_prod = self._comp_prod(X)
+        X_prod = self._comp_prod(X[:,self.active_dims])
         return self.variance*MultiLayerPerceptronKernel.four_over_tau*\
             at.math.arcsin(X_prod/(X_prod+1.))
     
     def full(self, X, X2=None):
         if X2 is None:
-            X_denom = at.math.sqrt(self._comp_prod(X)+1.)
+            X_denom = at.math.sqrt(self._comp_prod(X[:,self.active_dims])+1.)
             X2_denom = X_denom
             X2 = X
         else:
-            X_denom = at.math.sqrt(self._comp_prod(X)+1.)
+            X_denom = at.math.sqrt(self._comp_prod(X[:,self.active_dims])+1.)
             X2_denom = at.math.sqrt(self._comp_prod(X2)+1.)
-        XTX = self._comp_prod(X,X2)/X_denom[:,None]/X2_denom[None,:]
+        XTX = self._comp_prod(X[:,self.active_dims],X2)/X_denom[:,None]/X2_denom[None,:]
         return self.variance*MultiLayerPerceptronKernel.four_over_tau*\
             at.math.arcsin(XTX)
