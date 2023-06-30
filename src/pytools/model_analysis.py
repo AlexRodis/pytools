@@ -1,11 +1,37 @@
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+# This module contains additional tools for Artificial Neural Network
+# decision interpretation via masking. We can assess an ANNs decision
+# making process by locating the minimum set of inputs that is necessary
+# for the model to make correct predictions. Give a set of inputs that
+# the ANN correctly predicts, we find the smallest possible set of inputs
+# we can remove (setting to 0), such that predictions are still reasonably
+# correct. Features can be masked by multiplying the validation matrix with
+# a vector of 1s (feature persists) and 0s (feature is removed). We seek to
+# find the vector with the smallest number of 1s. Utilities defined here
+# all implement difference ways of generating candidate vectors:
+#   - | CartesiaMasking := Generate all possible vectors of 1s and 0s.
+#       becomes extremelly large as the number of features increases
+#   - | CombinatorialMasking := All possible ways to mask K features.
+#   - | SingleMasking := All possible ways to mask a single feature
+#   -   at a time
+#   - | RandomMasking := Generate a random subset of the full Cartesian
+#   -   masking
+#   - | RandomCombinatorialMasking := Generate a random subset of
+#   -   of the full Combinatorial masking for K features 
+
+
 import typing
 import random
 from abc import ABC, abstractmethod
 from math import comb
-
-# Model interpretation and validation tools
-
-# Maintenance Note: The input masking suite needs more testing
 
 
 
