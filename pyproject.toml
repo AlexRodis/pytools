@@ -23,6 +23,15 @@ dependencies = [
 	"seaborn",
 	"arviz"
 ]
+CPU = [
+    'jax[cpu]',
+    numpyro
+]
+
+GPU = [
+    '"jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html',
+    'numpyro'
+]
 
 [project.urls]
 "Homepage" = "https://github.com/AlexRodis/pytools"
