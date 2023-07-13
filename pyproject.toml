@@ -4,10 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytools"
+version = "0.0.1"
+authors = [
+    {name = "Alexander Rodis", email = "alexanderrhodis@gmail.com"},
+]
+description = "A compilation of tools and utility code for data analysis and machine learning to facilitate reusability"
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = ["data", "analysis", "science", "tools", "bayesian", "inference",
-"statistics", "machine", "learning"]
+keywords = [
+      "data", "analysis", "science", "tools", 
+      "bayesian", "inference", "statistics", 
+      "machine", "learning"
+]
 lincense = {text="Apache-2.0"}
 classifiers = [
 	"Programming Language :: Python :: 3",
@@ -21,8 +29,12 @@ dependencies = [
 	"scikit-learn",
 	"umap-learn",
 	"seaborn",
-	"arviz"
+	"arviz",
+    "bayesian-models",
 ]
+
+[project.optional-dependencies]
+
 CPU = [
     'jax[cpu]',
     'numpyro'
@@ -33,19 +45,17 @@ GPU = [
     'numpyro'
 ]
 
+
 [project.urls]
 "Homepage" = "https://github.com/AlexRodis/pytools"
 "Bug Tracker" = "https://github.com/AlexRodis/pytools/issues"
-# Unused
-"Documentation" = "https://readthedocs.org/projects/pytools/"
+"Documentation" = "https://readthedocs.org/projects/pytools"
 
 
 dynamic = ["version"]
 
-[project.optional-dependencies]
-
-GPU = ["jax[cuda12_pip]"]
-DATABASES = ["django"]
-
-
-
+[tool.setuptools.packages.find]
+where = ['src.pytools']
+include = ['pytools*']
+exclude = ['tests.*']
+namespaces = false
