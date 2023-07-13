@@ -57,7 +57,6 @@ Documentation = "https://readthedocs.org/projects/pytools"
 Repository = "https://github.com/AlexRodis/pytools"
 Changelog = "https://github.com/AlexRodis/pytools/blob/master/CHANGELOG.md"
 
-"dynamic" = ["version"]
 
 [tool.setuptools.packages.find]
 where = ['src.pytools']
