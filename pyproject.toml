@@ -46,17 +46,16 @@ CPU = [
 
 GPU = [
     '"jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html',
-    'numpyro'
+    'numpyro',
 ]
 
 
 [project.urls]
 Homepage = "https://github.com/AlexRodis/pytools"
-Bug Tracker = "https://github.com/AlexRodis/pytools/issues"
+"Bug Tracker" = "https://github.com/AlexRodis/pytools/issues"
 Documentation = "https://readthedocs.org/projects/pytools"
 Repository = "https://github.com/AlexRodis/pytools"
 Changelog = "https://github.com/AlexRodis/pytools/blob/master/CHANGELOG.md"
-
 
 dynamic = ["version"]
 
