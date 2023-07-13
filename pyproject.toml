@@ -8,8 +8,13 @@ version = "0.0.1"
 authors = [
     {name = "Alexander Rodis", email = "alexanderrhodis@gmail.com"},
 ]
+maintainers = [
+  {name = "Alexander Rodis", email = "alexanderrhodis@gmail.com"}
+]
 description = "A compilation of tools and utility code for data analysis and machine learning to facilitate reusability"
-readme = "README.md"
+readme = {
+    file"README.md", content-type = "text/markdown"
+}
 requires-python = ">=3.10"
 keywords = [
       "data", "analysis", "science", "tools", 
@@ -19,7 +24,8 @@ keywords = [
 lincense = {text="Apache-2.0"}
 classifiers = [
 	"Programming Language :: Python :: 3",
-	"Operating System :: OS independent"
+	"Operating System :: OS independent",
+    "DEvelopment Status :: 4 - Beta",
 ]
 
 dependencies = [
@@ -47,9 +53,11 @@ GPU = [
 
 
 [project.urls]
-"Homepage" = "https://github.com/AlexRodis/pytools"
-"Bug Tracker" = "https://github.com/AlexRodis/pytools/issues"
-"Documentation" = "https://readthedocs.org/projects/pytools"
+Homepage = "https://github.com/AlexRodis/pytools"
+Bug Tracker = "https://github.com/AlexRodis/pytools/issues"
+Documentation = "https://readthedocs.org/projects/pytools"
+Repository = "https://github.com/AlexRodis/pytools"
+Changelog = "https://github.com/AlexRodis/pytools/blob/master/CHANGELOG.md"
 
 
 dynamic = ["version"]
