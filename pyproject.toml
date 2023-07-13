@@ -19,7 +19,7 @@ keywords = [
       "bayesian", "inference", "statistics", 
       "machine", "learning"
 ]
-lincense = {text="Apache-2.0"}
+license = {text="Apache-2.0"}
 classifiers = [
 	"Programming Language :: Python :: 3",
 	"Operating System :: OS independent",
