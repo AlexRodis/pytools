@@ -68,7 +68,7 @@ Changelog = "https://github.com/AlexRodis/pytools/blob/master/CHANGELOG.md"
 
 
 [tool.setuptools.packages.find]
-where = ['src.pytools']
+where = ['src/pytools']
 include = ['pytools*']
 exclude = ['tests.*']
 namespaces = false
