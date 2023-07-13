@@ -44,11 +44,20 @@ CPU = [
     'numpyro'
 ]
 
-GPU = [
-    '"jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html',
+GPU11 = [
+    'jax[cuda11_pip]',
     'numpyro',
 ]
 
+GPU12 = [
+    'jax[cuda12_pip]',
+    'numpyro',
+]
+
+TPU = [
+    'jax[tpu]',
+    'numpyro',
+]
 
 [project.urls]
 Homepage = "https://github.com/AlexRodis/pytools"
