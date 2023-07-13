@@ -25,7 +25,7 @@ dependencies = [
 ]
 CPU = [
     'jax[cpu]',
-    numpyro
+    'numpyro'
 ]
 
 GPU = [
