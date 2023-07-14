@@ -23,7 +23,7 @@
 # - SiLU
 
 from dataclasses import dataclass, field
-from typing import NDArray
+from .typing import NDArray
 import typing
 import numpy as np
 import pandas as pd
