@@ -28,7 +28,7 @@ import numpy as np
 import typing
 import pandas as pd
 from dataclasses import dataclass, field
-from utilities import numpy_replace
+from .utilities import numpy_replace
 
 
 class BayesianModel(typing.Protocol):
