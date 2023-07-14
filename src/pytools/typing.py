@@ -24,6 +24,7 @@
 
 # Custom typing module
 import typing
+from numpy.typing import NDArray
 
-NDArray = np.typing.NDArray
-FloatArray = np.typing.NDArray[float]
+NDArray = NDArray
+FloatArray = NDArray[float]
