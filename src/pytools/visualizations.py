@@ -890,49 +890,49 @@ def categorical_scatter(X:pd.DataFrame, Y:typing.Optional[pd.DataFrame],
         factors of the Y variable will have different sizes instead.
         
         Args:
-        -----
+        ======
         
-            - X:pandas.DataFrame := The data to depict. When Y is also 
-            specified, X is assumed to be the DataFrame of indicator 
+            - | X:pandas.DataFrame := The data to depict. When Y is also
+            specified, X is assumed to be the DataFrame of indicator
             variables
             
-            - Y:Optional[pandas.DataFrame] := Optional Dataframe of 
-            categorical variables to depict. Ignored if `category` is 
+            - | Y:Optional[pandas.DataFrame] := Optional Dataframe of
+            categorical variables to depict. Ignored if `category` is
             `None`.
             
-            - idx_lvl:int=1 := For multilevel indexed dataframes the lowest 
-            level to squash the index on. Must be non-negative
+            - | idx_lvl:int=1 := For multilevel indexed dataframes the
+            lowest level to squash the index on. Must be non-negative
             
-            - cols:int=3 := Number of columns for the resulting facet grid 
-            plot. Must be non-negative. Defaults to 3
+            - | cols:int=3 := Number of columns for the resulting facet
+            grid plot. Must be non-negative. Defaults to 3
             
-            - max_rows:int=3 := Maximum number of rows per batch the generator 
-            yields. Defaults to 3 and must be non-negative
+            - | max_rows:int=3 := Maximum number of rows per batch the
+            generator yields. Defaults to 3 and must be non-negative
             
-            - figsize:tuple[int, int] := A `height x width` tuple for the 
-            generated plots. Defaults to `(30, 15)`
+            - | figsize:tuple[int, int] := A `height x width` tuple for
+            the generated plots. Defaults to `(30, 15)`
             
-            - xaxis_label_size:int=12 := The size of the x-axis titles for 
-            each subplot. Must be non-negative and defaults to 12
+            - | xaxis_label_size:int=12 := The size of the x-axis titles
+            for each subplot. Must be non-negative and defaults to 12
             
-            - yaxis_label_size:int=12 := The size of the y-axis titles for 
-            each subplot. Must be non-negative and defaults to 12
+            - | yaxis_label_size:int=12 := The size of the y-axis titles
+            for each subplot. Must be non-negative and defaults to 12
             
-            - categorical:Optional[str] := Set the display of the categorical 
-            variable. (1) `None` ignores `Y` and only displays X pair-wise 
-            scatterplots, (2) 'hue' displays the categorical variable of `Y` 
-            as color and (3) 'size' displays the categorical variable with 
-            differently sized points
+            - | categorical:Optional[str] := Set the display of the
+            categorical variable. (1) `None` ignores `Y` and only
+            displays X pair-wise scatterplots, (2) 'hue' displays the
+            categorical variable of `Y` as color and (3) 'size' displays
+            the categorical variable with differently sized points
             
         Returns:
-        --------
+        =========
         
             - fig:matplotlib.pyplot.figure := The figure object, a FacetPlot 
             of scatterplots
             
        
        Raises:
-        ------
+       ========
         
             - WIP
             
