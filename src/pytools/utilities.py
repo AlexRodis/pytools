@@ -22,7 +22,7 @@
 # - GELU 
 # - SiLU
 
-from typing import NDArray
+from pytools.typing import NDArray
 import numpy as np
 import pandas as pd
 
