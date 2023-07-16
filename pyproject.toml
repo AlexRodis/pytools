@@ -34,11 +34,20 @@ dependencies = [
 	"umap-learn",
 	"seaborn",
 	"arviz",
-    "screeninfo",
     "bayesian-models",
 ]
 
 [project.optional-dependencies]
+
+DEV = [
+    "GPy",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "pytest",
+    "jax[cuda12_pip]",
+    "numpyro",
+    
+]
 
 CPU = [
     'jax[cpu]',
