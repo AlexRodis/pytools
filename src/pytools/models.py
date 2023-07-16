@@ -29,6 +29,8 @@ import typing
 import pandas as pd
 from dataclasses import dataclass, field
 from .utilities import numpy_replace
+from pytools.utilities import Pipeline
+from bayesian_models.core import Distribution
 
 
 class BayesianModel(typing.Protocol):
