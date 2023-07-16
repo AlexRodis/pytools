@@ -858,15 +858,24 @@ class DirichletGPClassifier(BayesianEstimator):
                 - RuntimeError := If the `_trained` or `_intialized`
                   sentinels are False
         '''
+        verbosity_choices:tuple[str,...] = (
+            'full_trace', "predictive_dist", "point_predictions"
+            )
         self.__raise_any__()
+        if verbosity not in verbosity_choices:
+            raise ValueError((
+                "Unknown verbosity argument. Expected on of 'full_trace', 'predictive_dist' or "
+                f"'point_predictions' but received {verbosity} instead"
+                ))
         with self.model:
             pm.set_data(dict(inputs=self.__preprocess_features__(Xnew, transform_only=True) ))
             self.trace = pm.sample_posterior_predictive(self.idata, *args, **kwargs)
-        if verbosity_level == 2:
+        if verbosity == "full_trace":
             return self.trace
-        elif verbosity_level == 1:
+        elif verbosity == 'predictive_dist':
             return self.trace.stack(sample=("chain", "draw")).posterior_predictive
-        elif verbosity_level == 0:
+        elif verbosity == 'point_predictions':
+            
             a = self.trace.stack(
                 sample=("chain", "draw")
                 ).posterior_predictive['α_star'].mean(axis=-1).values
