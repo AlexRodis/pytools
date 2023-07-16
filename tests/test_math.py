@@ -1,6 +1,6 @@
 import unittest
 import numpy
-from src.pytools.math.kernels import MultiLayerPerceptronKernel
+from pytools.math.kernels import MultiLayerPerceptronKernel
 import GPy
 import numpy as np
 from itertools import product
