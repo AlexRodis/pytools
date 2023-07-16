@@ -131,18 +131,10 @@ class BayesianModel(typing.Protocol):
 @dataclass(slots=True, kw_only=True)
 class BayesianEstimator:
     save_dir:typing.Optional[str] = None
-    idata:typing.Optional[az.InferenceData] = field(
-        repr=False, init =False, default=None
-        )
-    model:typing.Optional[pymc.Model] = field(
-        repr=False, init =False, default=None
-        )
-    posterior:typing.Optional[az.InferenceData] = field(
-        repr=False, init =False, default=None
-        )
-    coords:dict[str, typing.Any] = field(
-        init=False, default_factory=dict
-        )
+    idata:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
+    model:typing.Optional[pymc.Model] = field(repr=False, init =False, default=None)
+    posterior:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
+    coords:dict[str, typing.Any] = field(init=False, default_factory=dict)
 
 
     def __raise_uninitialized__(self):
@@ -180,8 +172,8 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - | RuntimeError := If the :code:`_trained` or
-                    :code:`_intialized` sentinels are False
+                - RuntimeError := If the `_trained` or `_intialized`
+                  sentinels are False
         '''
         self.__raise_untrained__()
         return az.plot_posterior(self.idata, *args, **kwargs)
@@ -194,8 +186,8 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - | RuntimeError := If the :code:`_trained` or
-                    :code:`_intialized` sentinels are False
+                - RuntimeError := If the `_trained` or `_intialized`
+                  sentinels are False
         '''
         self.__raise_uninitialized__()
         return az.plot_trace(self.idata, *args, **kwargs)
@@ -207,8 +199,7 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - | RuntimeError := If the :code:`_trained` or
-                    :code:`_intialized` sentinels are False
+                - RuntimeError := If the `_trained` or `_intialized` sentinels are False
         '''
         return az.summary(self.idata, *args, **kwargs)
 
@@ -216,14 +207,14 @@ class BayesianEstimator:
         r'''
             Plot MCMC transition energy
 
-            Wrapper around :code:`arviz.plot_energy`. All arguments are forwarded
+            Wrapper around :code:`arviz.plot_energy`. All arguements are forwarded
         '''
 
         return az.plot_energy(self.idata)
 
     def __pickle__(self):
         r'''
-            Save the entire model with the :code:`cloudpickle`
+            Save the entire model with the `cloudpickle`
             module
         '''
         import cloudpickle
@@ -253,14 +244,14 @@ class BayesianEstimator:
                     save. Accepted values are 'pickle' and 'netcdf'. For
                     `method='pickle'`, serialize the entire model object
                     as a string. For `method='netcdf'` save the
-                    `arviz.InferenceData` object only. Optional.
-                    Defaults to 'pickle'
+                    `arviz.InferenceData` object only. Optional. Defaults
+                    to 'pickle'
 
             Raises:
             =======
 
-                - | ValueError := If supplied method argument is not one
-                    of :code:'pickle' or :code:'netcdf'
+                - | ValueError := If supplied method argumenet is not one
+                    of 'pickle' or 'netcdf'
         '''
         if self.save_dir is None and save_dir is None:
             raise ValueError((
@@ -292,20 +283,18 @@ class BayesianEstimator:
 
             - | save_dir:str := Directory to load the model from
 
-            - | method:str='pickle' := How the model was saved. If
-                `method:str='pickle'` unpickles the entire object return
-                a new instance. If `method:str='netcdf'`, creates a new
-                instance with the specified inference data. When
-                `method:str='netcdf'` the training data must also be
+            - | method:str='pickle' := How the model was saved.
+                If `method:str='pickle'` unpickles the entire object
+                return a new instance. If `method:str='netcdf'`,
+                creates a new instance with the specified inference data.
+                When `method:str='netcdf'` the training data must also be
                 supplied
 
-            - | X_train:Optional[pandas.DataFrame=None] := Training
-                features. Only required if `method:str='netcdf'`,
-                otherwise ignored
+            - | X_train:Optional[pandas.DataFrame=None] := Training features.
+                Only required if `method:str='netcdf'`, otherwise ignored
 
-            - | Y_train:Optional[pandas.DataFrame=None] := Training
-                targets. Only required if `method:str='netcdf'`,
-                otherwise ignored
+            - | Y_train:Optional[pandas.DataFrame=None] := Training targets.
+                Only required if `method:str='netcdf'`, otherwise ignored
                 
     '''
         if method == "pickle":
@@ -344,8 +333,7 @@ class DirichletGPClassifier(BayesianEstimator):
                     \mathcal{X}\in\reals^d, y\in\{0,1,\dots,K \}\}\\
                     \\
                     \mathbf{f} \thicksim \begin{pmatrix}
-                        \mathcal{GP}_0(\mu_0(\mathbf{x}), 
-                        \kappa_0(\mathbf{x}))
+                        \mathcal{GP}_0(\mu_0(\mathbf{x}), \kappa_0(\mathbf{x}))
                         & \dots & \mathcal{GP}_K(\mu_K(\mathbf{x}), 
                         \kappa_K(\mathbf{x}))
                     \end{pmatrix}\\
@@ -382,8 +370,8 @@ class DirichletGPClassifier(BayesianEstimator):
                 predictive samples. Stores the values from the most
                 recent call to `predict`
 
-            - | approximate:bool=True := If :code:`True` use the Hilbert
-                Space approximation for faster inference. Only effective
+            - | approximate:bool=True := If :code:`True` use the Hilbert 
+                Space approximation for faster inference. Only effective 
                 for up to 3-4 input dimensions. Optional. Defaults to
                 :code:`True`.
 
@@ -432,9 +420,8 @@ class DirichletGPClassifier(BayesianEstimator):
 
             - | _processor:Optional[Any] := A reference to the specific
                 Gaussian Process implementation. Is set to either
-                :code:`pymc.go.HSGP` when :code:`approximate=True` or
-                :code:`pymg.gp.Latent` when :code:`approximate=False`
-                (untested)
+                `pymc.go.HSGP` when `approximate=True` or
+                `pymg.gp.Latent` when `approximate=False` (untested)
 
             - | _initialized:bool=False := Model specification sentinel.
                 Prevents calls to post-__call__ methods until the
@@ -447,168 +434,118 @@ class DirichletGPClassifier(BayesianEstimator):
         Object Public Methods:
         ========================
 
-            - | __init__(pipeline:Pipeline)->self. := An instance of
+            - | __init__(pipeline:Pipeline)->self. := An instance of 
                 `Pipeline` encapsulating data preprocessing operations
 
-            - | __call__(X:pandas.DataFrame,y:pandas.DataFrame)->self :=
-                Specify the full probability model for inference,
-                providing inputs :code:`X` and outputs :code:`y`
+            - | __call__(X:pandas.DataFrame,y:pandas.DataFrame)->self := 
+                Specify the full probability model for inference, providing
+                inputs :code:`X` and outputs :code:`y`
 
-            - | fit(sampler:Callable=pymc.sample, *sampler_args:tuple,
-                **sampler_kwargs:dict[str,Any])->arviz.InferenceData :=
+            - | fit(sampler:Callable=pymc.sample, *sampler_args:tuple, 
+                **sampler_kwargs:dict[str,Any])->arviz.InferenceData := 
                 Perform inference on the data, using MCMC. Returns a
-                :code:`arviz.InferenceData` object containing the
-                results of inference. :code:`sampler` is a Callable
-                specifying which implementation of MCMC to use. Defaults
-                to :code:`pymc.sample`. Other options include
-                :code:`pymc.sample_numpyro_nuts`, which required
-                external dependencies
+                :code:`arviz.InferenceData` object containing the results
+                of infernce. :code:`sampler` is a Callable specifying which
+                implementation of MCMC to use. Defaults to :code:`pymc.sample`.
+                Other options include :code:`pymc.sample_numpyro_nuts`, which
+                required external dependencies
 
-            - | predict(Xnew:pandas.DataFrame, *args:tuple,
-                verbosity_level:int=2,
-                kwargs:dict[str,Any])->arviz.InferenceData := Predict on
-                new points :code:`Xnew`, with optional postprocessing
-                logic defined by the :code:`verbosity_level` argument.
-                For `verbosity_level=0`, returns point predictions are
-                labels, inference from the training data. For
-                :code:`verbosity_level=1` sample concentration, and
-                stack the chain and draw dimensions into a new dimension
-                named :code:`samples`. For :code:`verbosity_level=2`
-                returns the full posterior predictive samples. All other
-                arguments are forwarded to
+            - | predict(Xnew:pandas.DataFrame, *args:tuple, verbosity_level:int=2,
+                kwargs:dict[str,Any])->arviz.InferenceData := Predict on new points 
+                :code:`Xnew`, with optional postprocessing logic defined by the 
+                :code:`verbosity_level` arguement. For `verbosity_level=0`,
+                returns point predictions are labels, inference from the training data.
+                For :code:`verbosity_level=1` sample concentration, and stack the chain 
+                and draw dimensions into a new dimension named :code:`samples`. For
+                :code:`verbosity_level=2` returns the full posterior predictive samples.
+                All other arguements are forwarded to 
                 :code:`pymc.sample_posterior_predictive`.
 
-            - | save(save_dir:Optional[str]=None,
-                method:str='pickle')->None := Save the model into target
-                directory. :code:`save_dir` must be provided, either as
-                an object attribute or during the call. For
-                code:`method='pickle'` will serialize the entire object
-                for ready reuse. For :code:`method=netcdf` only saves
-                the posterior code:`InferenceData` object. When loading
-                the latter from memory no checks are being made that the
-                posterior trace is consistent with the model object.
+            - | save(save_dir:Optional[str]=None, method:str='pickle')->None := Save 
+                the model into target directory. :code:`save_dir` must be provided, 
+                either as an object attribute or during the call. For 
+                code:`method='pickle'` will serialize the entite object for 
+                ready reuse. For :code:`method=netcdf` only saves the posterior 
+                code:`InferenceData` object. When loading the latter from memory no 
+                checks are being made that the posterior trace is consistant with the 
+                model object.
 
-            - | load(save_dir:str,
-                method:str='pickle')->DirichletGPClassifier := Load a
-                model from memory according to the method specified by
-                :code:`method`. For :code:`method='pickle'` simply
-                unserializes the object and returns a the new instance
-                of :code:`DirichletGPClassifier`
+            - | load(save_dir:str, method:str='pickle')->DirichletGPClassifier := Load
+                a model from memory according to the method specified by :code:`method`.
+                For :code:`method='pickle'` simply unserializes the object and returns
+                a the new instance of :code:`DirichletGPClassifier`
 
-            - | plot_trace(*args:tuple, **kwargs:dict)-> := Display a
-                trace plot of model inference. Wrapper for
-                :code:`arviz.plot_trace`. All arguments are forwarded.             
+            - | plot_trace(*args:tuple, **kwargs:dict)-> := Display a trace plot of
+                model inference. Wrapper for :code:`arviz.plot_trace`. 
+                All arguements are forwarded.             
 
-            - | plot_energy(*args:tuple,
-                **kwargs:dict)->pandas.DataFrame := Display an energy
-                plot for model inference. Wrapper for
-                :code:`arviz.plot_energy`. All arguments are forwarded.
+            - | plot_energy(*args:tuple, **kwargs:dict)->pandas.DataFrame := Display an
+                energy plot for model inference. Wrapper for :code:`arviz.plot_energy`. 
+                All arguments are forwarded.
 
-            - | plot_posterior(*args:tuple, **kwargs:dict)-> := Display
-                a plot of the models posterior. Wrapper for
-                :code:`arviz.plot_posterior`. All arguments are
-                forwarded.            
+            - | plot_posterior(*args:tuple, **kwargs:dict)-> := Display a 
+                plot of the models posterior. Wrapper for :code:`arviz.plot_posterior`. 
+                All arguements are forwarded.            
     '''
     pipeline:Pipeline = field(default= None)
     features:typing.Optional = field(init =False, default=None)
     classes:typing.Optional = field(init =False, default=None)
-    model:typing.Optional[pymc.Model] = field(
-        repr=False, init = False, default=None
-        )
-    lengthscales:typing.Optional[
-        typing.Sequence[Distribution]
-        ] = field(default = None)
-    means:typing.Optional = field(default=None)
-    idata:typing.Optional[az.InferenceData] = field(
-        repr=False, init =False, default=None
-        )
-    posterior:typing.Optional[az.InferenceData] = field(
-        repr=False, init =False, default=None
-        )
+    model:typing.Optional[pymc.Model] = field(repr=False, init =False, default=None)
+    idata:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
+    posterior:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
     approximate:bool=True
-    hsgp_c:typing.Optional[float] = field(default=1.3)
-    hsgp_m:typing.Optional[typing.Sequence[int]] = field(
-        default_factory=[7]
-        )
+    hsgp_kwargs:dict = field(default_factory=dict)
     perturbation_factor:float= 1e-6
-    trace:typing.Optional[az.InferenceData] = field(
-        init=False, default=None
-        )
+    trace:typing.Optional[az.InferenceData] = field(init=False, default=None)
     save_dir:typing.Optional[str] = None
-    posterior_probabilities:bool = True
-    posterior_labels:bool = True
     
     _encodings:typing.Optional[dict] = None
     _decodings:typing.Optional[dict] = None
-    _n_features:typing.Optional[int] = field(
-        init = False, default = None
-        )
-    _n_inputs:typing.Optional[int] = field(
-        init = False, default = None
-        )
-    _n_obs:typing.Optional[int] = field(
-        init = False, default = None
-        )
-    _n_classes:typing.Optional[int] = field(
-        init = False, default = None
-        )
+    _n_features:typing.Optional[int] = field(init = False, default = None)
+    _n_inputs:typing.Optional[int] = field(init = False, default = None)
+    _n_obs:typing.Optional[int] = field(init = False, default = None)
+    _n_classes:typing.Optional[int] = field(init = False, default = None)
     _classes:typing.Optional = field(default = None)
     _means:typing.Optional[np.typing.NDArray] = None
     _target_label:typing.Optional[str] = None
-    _coords:typing.Optional[dict] = field(
-        repr=False, init=False, default_factory=dict
-        )
+    _coords:typing.Optional[dict] = field(repr=False, init=False, default_factory=dict)
     _processor:typing.Optional = field(init=False, repr=False)
-    _prior_latents:typing.Optional[list] = field(
-        repr= False, init=False, default_factory=list
-        )
+    _prior_latents:typing.Optional[list] = field(repr= False, init=False, default_factory=list)
     _conditional_latents:typing.Optional[list] = field(repr= False, init=False, default_factory=list)
-    _processes:typing.Optional[list] = field(
-        repr= False, init=False, default_factory=list
-        )
+    _processes:typing.Optional[list] = field(repr= False, init=False, default_factory=list)
     _initialized:bool = False
     _trained:bool = False
-    _3d_cache:typing.Optional=field(
-        init=False, repr=False, default=None
-        )
-    _default_colors:typing.Optional[list[str]] = field(
-        repr=False, init=False, default=None
-        )
-    _linspace:typing.Optional[typing.NamedTuple] = field(
-        repr=False, init=False, default=None
-        ) 
+    _3d_cache:typing.Optional=field(init=False, repr=False, default=None)
+    _default_colors:typing.Optional[list[str]] = field(repr=False, init=False,
+        default=None)
+    _linspace:typing.Optional[typing.NamedTuple] = field(repr=False, init=False, default=None) 
 
     def __post_init__(self)->None:
         r'''
             Initialize the gaussian processor
         '''
         from collections import namedtuple
-        from functools import partial
         if self.approximate:
-            self._processor = partial(
-                pymc.gp.HSGP, c = self.hsgp_c, m = self.hsgp_m
-            )
+            self._processor = pymc.gp.HSGP
         else:
             self._processor = pymc.gp.Latent
 
-        self._default_colors= [
-            'plasma','viridis','blues','aggrnyl', 'agsunset', 'algae', 
-            'amp', 'armyrose', 'balance',
-            'blackbody', 'bluered', 'blugrn', 'bluyl', 'brbg',
-            'brwnyl', 'bugn', 'bupu', 'burg', 'burgyl', 'cividis', 'curl',
-            'darkmint', 'deep', 'delta', 'dense', 'earth', 'edge', 'electric',
-            'emrld', 'fall', 'geyser', 'gnbu', 'gray', 'greens', 'greys',
-            'haline', 'hot', 'hsv', 'ice', 'icefire', 'inferno', 'jet',
-            'magenta', 'magma', 'matter', 'mint', 'mrybm', 'mygbm', 'oranges',
-            'orrd', 'oryel', 'oxy', 'peach', 'phase', 'picnic', 'pinkyl',
-            'piyg',  'plotly3', 'portland', 'prgn', 'pubu', 'pubugn',
-            'puor', 'purd', 'purp', 'purples', 'purpor', 'rainbow', 'rdbu',
-            'rdgy', 'twilight','rdpu', 'rdylbu', 'rdylgn', 'redor', 'reds', 'solar',
-            'spectral', 'speed', 'sunset', 'sunsetdark', 'teal', 'tealgrn',
-            'tealrose', 'tempo', 'temps', 'thermal', 'tropic', 'turbid',
-            'turbo',  'ylgn', 'ylgnbu', 'ylorbr',
-            'ylorrd'
-                ]
+        self._default_colors= ['plasma','viridis','blues','aggrnyl', 'agsunset', 'algae', 
+                 'amp', 'armyrose', 'balance',
+                 'blackbody', 'bluered', 'blugrn', 'bluyl', 'brbg',
+                 'brwnyl', 'bugn', 'bupu', 'burg', 'burgyl', 'cividis', 'curl',
+                 'darkmint', 'deep', 'delta', 'dense', 'earth', 'edge', 'electric',
+                 'emrld', 'fall', 'geyser', 'gnbu', 'gray', 'greens', 'greys',
+                 'haline', 'hot', 'hsv', 'ice', 'icefire', 'inferno', 'jet',
+                 'magenta', 'magma', 'matter', 'mint', 'mrybm', 'mygbm', 'oranges',
+                 'orrd', 'oryel', 'oxy', 'peach', 'phase', 'picnic', 'pinkyl',
+                 'piyg',  'plotly3', 'portland', 'prgn', 'pubu', 'pubugn',
+                 'puor', 'purd', 'purp', 'purples', 'purpor', 'rainbow', 'rdbu',
+                 'rdgy', 'twilight','rdpu', 'rdylbu', 'rdylgn', 'redor', 'reds', 'solar',
+                 'spectral', 'speed', 'sunset', 'sunsetdark', 'teal', 'tealgrn',
+                 'tealrose', 'tempo', 'temps', 'thermal', 'tropic', 'turbid',
+                 'turbo',  'ylgn', 'ylgnbu', 'ylorbr',
+                 'ylorrd']
 
         self._linspace = namedtuple('LinearSpace', ['start', 'stop', 'n_points'])
         
@@ -667,6 +604,39 @@ class DirichletGPClassifier(BayesianEstimator):
             X_trans = X_raw
         return X_trans
 
+    def __validate_priors__(self):
+        if self.means is None:
+            warnings.warn((
+                "Mean function not explicitly specified. A centered "
+                "parameterization will be used"
+            ))
+            self.means = [pymc.gp.mean.Constant(c=0)]*self._n_classes
+        if len(self.means) == 1:
+            self.means *= self._n_classes
+            
+        if len(self.means) != self._n_classes:
+            raise ValueError((
+                "Mean must be a sequence of length 1 on exactly match the "
+                "number of unique classes. Saw {self._n_classes)} classes "
+                "but received {len(self.means)} mean instead instead"
+            ))
+        if self.lengthscales is None:
+            raise ValueError((
+                "Priors on lengthscales not specified. Expected "
+                "a `bayesian_models.Distribution` object but received "
+                "None instead"
+            ))
+        if len(self.lengthscales) == 1:
+            self.lengthscales *= self._n_classes
+        if len(self.lengthscales) != self._n_classes:
+            raise ValueError((
+                "Lengthscales must be a sequence whose length "
+                "exactly matches the number of classes in the "
+                f"data. Detected {self._n_classes} classes but "
+                f"received {len(self.lengthscales)} priors instead"
+            ))
+            
+
     def __preprocess_data__(self, X_raw, 
                             Y_raw)->tuple[
             np.typing.NDArray, np.typing.NDArray]:
@@ -708,9 +678,9 @@ class DirichletGPClassifier(BayesianEstimator):
         self._n_classes = len(classes)
         self._classes = classes
         self._target_label = Y_raw.columns[0]
+        self.__validate_priors__()
         X_trans = self.__preprocess_features__(X_raw)     
         Y_trans = self.__preprocess_targets__(Y_raw)
-        
         return X_trans, Y_trans
         
 
@@ -743,14 +713,20 @@ class DirichletGPClassifier(BayesianEstimator):
             train_outputs = pymc.ConstantData('train_outputs', Y_pr)
             N,M = train_inputs.shape.eval()
             self._n_inputs=M
-            for id in self._classes:
-                ℓ = pymc.Normal(f'ℓ_{id}', mu = 7., sigma=1.5, shape=(M,))
-                κ_se = pymc.gp.cov.ExpQuad(M, ls=ℓ )
+            for id, lengthscale, mean in zip(
+                self._classes, self.lengthscales, self.means, strict=True
+                ):
+                ℓ = lengthscale.dist(
+                    lengthscale.name, *lengthscale.dist_args, 
+                    **lengthscale.dist_kwargs, shape = (self._n_inputs,)
+                )
+                κ_se = pymc.gp.cov.ExpQuad(self._n_inputs, ls=ℓ )
                 κ = κ_se
-                C = 0.0
-                μ = pymc.gp.mean.Constant(c=C)
+                μ = mean()
                 gp = self._processor(
-                    mean_func=μ, cov_func=κ, c=1.3,m=[7]*M )
+                    mean_func=μ, 
+                    cov_func=κ
+                )
                 f = gp.prior(f'_f_{id}', train_inputs)
                 self._processes.append(gp)
                 self._prior_latents.append(f)
@@ -780,7 +756,10 @@ class DirichletGPClassifier(BayesianEstimator):
                 self._conditional_latents.append(f_star)
             f_star = pytensor.tensor.stack(self._conditional_latents).T
             α_star = pymc.Deterministic('α_star', pymc.math.exp(f_star) )
-            y_star = pymc.Dirichlet('y_star', a = α_star)
+            if self.posterior_probabilities:
+                π_star = pymc.Dirichlet('π_star', a=α_star)
+            if self.posterior_labels:
+                y_star = pymc.Categorical('y_star', p=π_star)
             
 
     def fit(self, *args, sampler:typing.Callable=pymc.sample,
