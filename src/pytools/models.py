@@ -131,10 +131,18 @@ class BayesianModel(typing.Protocol):
 @dataclass(slots=True, kw_only=True)
 class BayesianEstimator:
     save_dir:typing.Optional[str] = None
-    idata:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
-    model:typing.Optional[pymc.Model] = field(repr=False, init =False, default=None)
-    posterior:typing.Optional[az.InferenceData] = field(repr=False, init =False, default=None)
-    coords:dict[str, typing.Any] = field(init=False, default_factory=dict)
+    idata:typing.Optional[az.InferenceData] = field(
+        repr=False, init =False, default=None
+        )
+    model:typing.Optional[pymc.Model] = field(
+        repr=False, init =False, default=None
+        )
+    posterior:typing.Optional[az.InferenceData] = field(
+        repr=False, init =False, default=None
+        )
+    coords:dict[str, typing.Any] = field(
+        init=False, default_factory=dict
+        )
 
 
     def __raise_uninitialized__(self):
@@ -172,8 +180,8 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - RuntimeError := If the `_trained` or `_intialized`
-                  sentinels are False
+                - | RuntimeError := If the :code:`_trained` or
+                    :code:`_intialized` sentinels are False
         '''
         self.__raise_untrained__()
         return az.plot_posterior(self.idata, *args, **kwargs)
@@ -186,8 +194,8 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - RuntimeError := If the `_trained` or `_intialized`
-                  sentinels are False
+                - | RuntimeError := If the :code:`_trained` or
+                    :code:`_intialized` sentinels are False
         '''
         self.__raise_uninitialized__()
         return az.plot_trace(self.idata, *args, **kwargs)
@@ -199,7 +207,8 @@ class BayesianEstimator:
             Raises:
             =======
 
-                - RuntimeError := If the `_trained` or `_intialized` sentinels are False
+                - | RuntimeError := If the :code:`_trained` or
+                    :code:`_intialized` sentinels are False
         '''
         return az.summary(self.idata, *args, **kwargs)
 
@@ -207,14 +216,14 @@ class BayesianEstimator:
         r'''
             Plot MCMC transition energy
 
-            Wrapper around :code:`arviz.plot_energy`. All arguements are forwarded
+            Wrapper around :code:`arviz.plot_energy`. All arguments are forwarded
         '''
 
         return az.plot_energy(self.idata)
 
     def __pickle__(self):
         r'''
-            Save the entire model with the `cloudpickle`
+            Save the entire model with the :code:`cloudpickle`
             module
         '''
         import cloudpickle
@@ -244,14 +253,14 @@ class BayesianEstimator:
                     save. Accepted values are 'pickle' and 'netcdf'. For
                     `method='pickle'`, serialize the entire model object
                     as a string. For `method='netcdf'` save the
-                    `arviz.InferenceData` object only. Optional. Defaults
-                    to 'pickle'
+                    `arviz.InferenceData` object only. Optional.
+                    Defaults to 'pickle'
 
             Raises:
             =======
 
-                - | ValueError := If supplied method argumenet is not one
-                    of 'pickle' or 'netcdf'
+                - | ValueError := If supplied method argument is not one
+                    of :code:'pickle' or :code:'netcdf'
         '''
         if self.save_dir is None and save_dir is None:
             raise ValueError((
@@ -283,18 +292,20 @@ class BayesianEstimator:
 
             - | save_dir:str := Directory to load the model from
 
-            - | method:str='pickle' := How the model was saved.
-                If `method:str='pickle'` unpickles the entire object
-                return a new instance. If `method:str='netcdf'`,
-                creates a new instance with the specified inference data.
-                When `method:str='netcdf'` the training data must also be
+            - | method:str='pickle' := How the model was saved. If
+                `method:str='pickle'` unpickles the entire object return
+                a new instance. If `method:str='netcdf'`, creates a new
+                instance with the specified inference data. When
+                `method:str='netcdf'` the training data must also be
                 supplied
 
-            - | X_train:Optional[pandas.DataFrame=None] := Training features.
-                Only required if `method:str='netcdf'`, otherwise ignored
+            - | X_train:Optional[pandas.DataFrame=None] := Training
+                features. Only required if `method:str='netcdf'`,
+                otherwise ignored
 
-            - | Y_train:Optional[pandas.DataFrame=None] := Training targets.
-                Only required if `method:str='netcdf'`, otherwise ignored
+            - | Y_train:Optional[pandas.DataFrame=None] := Training
+                targets. Only required if `method:str='netcdf'`,
+                otherwise ignored
                 
     '''
         if method == "pickle":
@@ -333,7 +344,8 @@ class DirichletGPClassifier(BayesianEstimator):
                     \mathcal{X}\in\reals^d, y\in\{0,1,\dots,K \}\}\\
                     \\
                     \mathbf{f} \thicksim \begin{pmatrix}
-                        \mathcal{GP}_0(\mu_0(\mathbf{x}), \kappa_0(\mathbf{x}))
+                        \mathcal{GP}_0(\mu_0(\mathbf{x}), 
+                        \kappa_0(\mathbf{x}))
                         & \dots & \mathcal{GP}_K(\mu_K(\mathbf{x}), 
                         \kappa_K(\mathbf{x}))
                     \end{pmatrix}\\
