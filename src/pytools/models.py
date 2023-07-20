@@ -564,7 +564,7 @@ class DirichletGPClassifier(BayesianEstimator):
     approximate:bool=True
     hsgp_c:typing.Optional[float] = field(default=1.3)
     hsgp_m:typing.Optional[typing.Sequence[int]] = field(
-        default_factory=[7]
+        default_factory=lambda : [7]
         )
     perturbation_factor:float= 1e-6
     trace:typing.Optional[az.InferenceData] = field(
