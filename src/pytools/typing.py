@@ -23,8 +23,11 @@
 # - SiLU
 
 # Custom typing module
-import typing
+from typing import *
 from numpy.typing import NDArray
+from collections import deque
 
 NDArray = NDArray
 FloatArray = NDArray[float]
+Collection = Union[list, tuple, dict, set,NDArray, Deque]
+CollectionClasses = list, tuple, dict,set, deque
