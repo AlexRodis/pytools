@@ -360,45 +360,83 @@ class DirichletGPClassifier(BayesianEstimator):
         ==========================
 
             - | pipeline:Pipeline := An object with similar
-                functionality to `sklearn.Pipeline` but only for
+                functionality to :code:`sklearn.Pipeline` but only for
                 preprocessing steps. Defines a series of objects with
-                `fit_transform` and `transform` methods, for data
-                preprocessing (i.e rescalling, dimensionality reduction,
-                etc)
+                :code:`fit_transform` and :code:`transform` methods, for
+                data preprocessing (i.e rescaling, dimensionality
+                reduction, etc). Optional
 
-            - | features := A `numpy.typing.NDArray` containing labels
-                for the input features. Extracted from passed data
+            - | features := A :code:`numpy.typing.NDArray` containing
+                labels for the input features. Inferred from passed
+                data (columns of predictor matrix)
 
-            - | classes := A `numpy.typing.NDArray` containing unique
-                classes to predict
+            - | classes := A :code:`numpy.typing.NDArray` containing
+                unique classes to predict. Inferred from training data
+                as unique values of target matrix
 
             - | model:Optional[pymc.Model] := A reference to the
-                `pymc.Model` object
+                :code:`pymc.Model` object
 
             - | idata:Optional[arviz.InferenceData] := Posterior samples
                 from MCMC inference
 
             - | posterior:Optional[arviz.InferenceData] := Posterior
                 predictive samples. Stores the values from the most
-                recent call to `predict`
+                recent call to :code:`predict` for efficient reuse
 
             - | approximate:bool=True := If :code:`True` use the Hilbert
                 Space approximation for faster inference. Only effective
                 for up to 3-4 input dimensions. Optional. Defaults to
-                :code:`True`.
+                :code:`True`
 
-            - | hsgp_kwargs:dict[str,Any] := Keyword arguments to be
-                forwarded to `pymc.gp.HSGP`. Generally  hyperparameters
-                for the approximation
+            - | hsgp_m:Optional[Sequence[int]] := The number of bases
+                functions to use for the approximation. Must be a
+                sequence of positive integers whose length exactly
+                matches the number of features in  the data. The more
+                bases functions are used, the more accurate the
+                approximation and higher the computational cost
+            
+            - | hsgp_c:Optional[float]=1.2 := Length factor for the
+                Hilbert Space approximation. For HSGP processes the
+                approximation is valid in a subspace of the input space
+                of the form c*[-L, +L] where L is the maximum absolute
+                value observed, dimension wise. Mainly effects the
+                behavior of the approximation near the edges of the
+                subspace
 
             - | perturbation_factor:float=1e-6 := A small perturbation
                 factor for observed points. Since the likelihood of the
                 Dirichlet is :math:`+\infty` at simplex edges, we shift
                 the observations but this small factor to improved
-                numerical stability
+                numerical stability. The one hot encoded target
+                variables (...,1,0,...) are perturbed to (...,
+                1-perturbation_factor, perturbation_factor/K-1), where K
+                is the length of the encoding vector
 
             - | save_dir:Optional[str] := Directory to save the model
-                to. Optional
+                to. Optional. Can be supplied during object
+                initialization or during calls to the :code:`save`
+                method
+                
+            - | posterior_probabilities:bool=True := If :code:`True`
+                includes the deterministic variable \pi_star in the
+                posterior trace, which returns predicted probabilities
+                for all the classes. Optional. Defaults to :code:`True`.
+                Set to False to reduce memory consumption
+            
+            - | posterior_distribution:bool=True := If :code:`True`
+                includes the deterministic variable \alpha_star in the
+                posterior trace, which returns the predictive Dirichlet
+                distribution. From this uncertainties, precision and
+                predictions can be extracted. Optional and defaults to
+                :code:`True`. Set to :code:`False` to reduce memory
+                consumption
+            
+            - | posterior_labels:bool=True := If :code:`True` includes
+                the Deterministic variable y_star in the posterior
+                trace, which returns predicted class labels (integer
+                encoded). Optional and defaults to :code:`True`. Set to
+                :code:`False` to reduce memory consumption
 
         Object Private Attributes:
         ==========================
@@ -434,14 +472,13 @@ class DirichletGPClassifier(BayesianEstimator):
                 Gaussian Process implementation. Is set to either
                 :code:`pymc.go.HSGP` when :code:`approximate=True` or
                 :code:`pymg.gp.Latent` when :code:`approximate=False`
-                (untested)
 
             - | _initialized:bool=False := Model specification sentinel.
                 Prevents calls to post-__call__ methods until the
-                `__call__` method has specified the model
+                :code:`__call__` method has been called
 
             - | _trained:bool=False := Model inference sentinel.
-                Prevents calls to post-fit methods until the `fit`
+                Prevents calls to post-fit methods until the :code:`fit`
                 method has been called
 
         Object Public Methods:
@@ -461,23 +498,22 @@ class DirichletGPClassifier(BayesianEstimator):
                 results of inference. :code:`sampler` is a Callable
                 specifying which implementation of MCMC to use. Defaults
                 to :code:`pymc.sample`. Other options include
-                :code:`pymc.sample_numpyro_nuts`, which required
+                :code:`pymc.sample_numpyro_nuts`, which requires
                 external dependencies
 
             - | predict(Xnew:pandas.DataFrame, *args:tuple,
-                verbosity_level:int=2,
+                verbosity_level:int='point_predictions',
                 kwargs:dict[str,Any])->arviz.InferenceData := Predict on
                 new points :code:`Xnew`, with optional postprocessing
                 logic defined by the :code:`verbosity_level` argument.
-                For `verbosity_level=0`, returns point predictions are
-                labels, inference from the training data. For
-                :code:`verbosity_level=1` sample concentration, and
-                stack the chain and draw dimensions into a new dimension
-                named :code:`samples`. For :code:`verbosity_level=2`
-                returns the full posterior predictive samples. All other
-                arguments are forwarded to
-                :code:`pymc.sample_posterior_predictive`.
-
+                For :code:`verbosity_level='full_posterior'` simply
+                returns the posterior predictive trace. For
+                :code:`verbosity_level='predictive_dist'` stacks chains
+                and extracts the 'posterior_predictive' group. For
+                :code:`verbosity_level='point_predictions'` returns only
+                the predicted labels. The following options must be
+                true:
+                
             - | save(save_dir:Optional[str]=None,
                 method:str='pickle')->None := Save the model into target
                 directory. :code:`save_dir` must be provided, either as
