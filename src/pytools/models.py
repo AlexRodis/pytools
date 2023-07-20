@@ -355,6 +355,48 @@ class DirichletGPClassifier(BayesianEstimator):
                     y \thicksim Dir(\mathbf{\alpha})
                     \\
                 \end{array}
+        
+        This is a probabilistic classifier whose output is a probability
+        distribution over discrete probability distributions. This
+        allows for an additional variance term expressing uncertainty
+        over the predicted probabilities themselves
+                
+        Example usage:
+        
+            ..code-block :: Python 3
+                from sklearn.datasets import make_blobs
+                from bayesian_models.core import distribution
+                import pandas
+                import numpy as np
+                
+                # Make synthetic data
+                x, y = make_blobs()
+                cols = [
+                    'Feature_{i}' for i in range(X.shape[1])
+                ]
+                X, Y = pd.DataFrame(x, columns = cols), pd.DataFrame(y)
+                M = X.shape[1]
+                # Initialize the estimator
+                estimator = DirichletGPClassifier(
+                    hsgp_m = [7]*M,
+                    hsgp_c = 1.3,
+                    lengthscales = distribution(
+                        [distribution(pymc.Normal, f'ℓ_{i}', 7, 1.5) for i in range(M)]
+                        ),
+                )
+                # Construct the computational graph and complete model
+                # initialization
+                estimator(X,Y)
+                # Invoke MCMC for inference
+                estimator.fit(
+                    1000, sampler=pymc.sample, tune=1000
+                    )
+                Xnew = pd.DataFrame(np.random.rand(30,M), 
+                    columns = cols)
+                # Predict on new points
+                estimator.predict(Xnew, 
+                    verbosity_level = 'full_posterior'
+                    )
 
         Object Public Attributes:
         ==========================
