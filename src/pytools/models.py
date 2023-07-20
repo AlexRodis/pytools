@@ -571,6 +571,7 @@ class DirichletGPClassifier(BayesianEstimator):
         init=False, default=None
         )
     save_dir:typing.Optional[str] = None
+    posterior_distribution:bool = True
     posterior_probabilities:bool = True
     posterior_labels:bool = True
     
@@ -844,13 +845,34 @@ class DirichletGPClassifier(BayesianEstimator):
         r'''
             Post inference actions
 
-            Constructs additional nodes in the computation graph for
-            predictions on new points. Create a data note for unseen
-            points and duplicates all GP nodes to generate the
-            corresponding conditional distributions.
+            Prepear the model for predictions by building the
+            conditional distribution. Constructs additional nodes in the
+            computation graph for predictions on new points. Creates a
+            data node for unseen points and duplicates all GP nodes to
+            generate the corresponding conditional distributions.
 
             Conditional variables are always named with suffix "_star",
             for example "f_star", "α_star" and "y_star".
+            
+            The following variables are added to the model:
+            
+                - f_star := The 'raw' conditional distribution of the GP
+                
+                - | α_star := The exponentiated output of the GP,
+                    defining the predicted Dirichlet distributions.
+                
+                - | π_star := The discrete predicted probabilities
+                    predicted. Only added if
+                    :code:`posterior_proabilities` is :code:`True`.
+                    Optional and defaults to :code:`True`. Disable for
+                    reduced memory consumption of the posterior
+                    predictives' trace.
+                    
+                - | y_star := The predicted class label, encoded as an
+                    integer. Only added if :code:`posterior_labels` is
+                    :code:`True`. Optional and defaults to :code:`True`.
+                    Disable to reduce the posterior predictives' memory
+                    footprint
         '''
         with self.model:
             inputs = pymc.MutableData('inputs', np.random.rand(3,self._n_inputs))
@@ -858,13 +880,18 @@ class DirichletGPClassifier(BayesianEstimator):
                 f_star=gp.conditional(f'f_star_{id}',inputs)
                 self._conditional_latents.append(f_star)
             f_star = pytensor.tensor.stack(self._conditional_latents).T
-            α_star = pymc.Deterministic('α_star', pymc.math.exp(f_star) )
+            if self.posterior_distribution:
+                α_star = pymc.Deterministic(
+                    'α_star', pymc.math.exp(f_star) )
             if self.posterior_probabilities:
                 π_star = pymc.Dirichlet('π_star', a=α_star)
             if self.posterior_labels:
                 y_star = pymc.Categorical('y_star', p=π_star)
             
 
+    # NOTE: This method is nearly identical across all models, since
+    # it relies of pymc. Should be refactored into a parent class,
+    # taking into account the new __post_fit__ method
     def fit(self, *args, sampler:typing.Callable=pymc.sample,
             **kwargs)->az.InferenceData:
         r'''
@@ -893,10 +920,7 @@ class DirichletGPClassifier(BayesianEstimator):
                 - | idata:arviz.InferenceData := The inference data
                     container. Returned by the sampler call
 
-            Updates the objects' `_trained` and `idata` attributes
-                    
-
-                
+            Updates the objects' :code:`_trained` and :code:`idata` attributes                
         '''
         self.__raise_uninitialized__()
         with self.model:
