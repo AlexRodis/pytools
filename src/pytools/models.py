@@ -825,7 +825,7 @@ class DirichletGPClassifier(BayesianEstimator):
                 )
                 κ_se = pymc.gp.cov.ExpQuad(self._n_inputs, ls=ℓ )
                 κ = κ_se
-                μ = mean()
+                μ = mean
                 gp = self._processor(
                     mean_func=μ, 
                     cov_func=κ
