@@ -26,11 +26,15 @@ import pymc as pm, pymc
 import arviz as az
 import numpy as np
 import typing
+from typing import Optional, Union, Sequence, Iterable
 import pandas as pd
 from dataclasses import dataclass, field
 from .utilities import numpy_replace
 from pytools.utilities import Pipeline
 from bayesian_models.core import Distribution
+from warnings import warn
+import pytensor
+import pytensor.tensor as pt
 
 
 class BayesianModel(typing.Protocol):
