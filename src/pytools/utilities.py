@@ -22,9 +22,89 @@
 # - GELU 
 # - SiLU
 
-from pytools.typing import NDArray
+from pytools.typing import NDArray, FloatArray
+import typing
+from typing import Optional, Callable, Iterable, Sequence, Union, Any
+from typing import Hashable, Iterator
+from pytools.typing import Collection, CollectionClasses
 import numpy as np
 import pandas as pd
+from dataclasses import dataclass
+import cloudpickle
+from warnings import warn
+import collections
+import math
+import operator
+import random
+import itertools
+
+@dataclass(slots=True)
+class LinearSpace:
+    r'''
+        Data object representing a linear space. A linear space can be
+        defined as the tuple (start, stop, n_points)
+        
+        Object Public Attributes:
+        ==========================
+        
+            - | start:float := The start of the span. Inclusive
+            
+            - | stop:float := The end of the span. Inclusive
+            
+            - | n_points:Optional[float] := The number of evenly spaced
+                points in the span. Optional. Defaults to 50
+        
+    '''
+    start:float
+    stop:float
+    n_points:Optional[float] = 50
+    
+def matrix_meshgrid(*spans:Iterable[LinearSpace],
+                    to_pandas:bool=False,
+                    columns:Optional[Sequence[str]]=None
+                    )->Union[FloatArray, pd.DataFrame]:
+    r'''
+        Wrapper around :code:`numpy.meshgrid` which returns a 2D matrix
+        of the tidy format, as expected by most Machine Learning
+        libraries
+        
+        Args:
+        ======
+        
+            - | *spans:Iterable[LinearSequence] := An iterable of spans
+                defining the coordinates of the meshgrid. Of the general
+                form :code:`start`, :code:`stop`, :code:`[n_points]`
+                
+            - | to_pandas:bool=False := If :code:`True` convert the
+                array into a :code:`pandas.DataFrame`. Optional and
+                defaults to :code:`False` (returning an array).
+                
+            - | columns:Sequence[str] := Coordinate names for output
+                dataframe columns. Optional. Ignored if
+                :code:`to_pandas=False`.
+            
+        Returns:
+        ========
+        
+            - | grid_matrix:NDArray[float] := The meshgrid in tidy
+                matrix form
+                
+    '''
+    coordinates:list[NDArray] = [
+        np.linspace(
+            span.start, span.stop, num=span.n_points
+            ) for span in spans
+    ]
+    mesh = np.meshgrid(*coordinates)
+    this = map(lambda elem: np.ravel(elem), mesh )
+    grid_matrix = np.vstack(tuple(this)).T
+    kargs:dict = dict(
+        columns = columns
+    ) if columns is not None else dict()
+    return grid_matrix if not to_pandas else pd.DataFrame(
+        grid_matrix, **kargs
+    )
+    
 
 # Utility methods
 def numpy_replace(arr:np.typing.NDArray, mapping:dict)->np.typing.NDArray:
