@@ -646,7 +646,9 @@ class DirichletGPClassifier(BayesianEstimator):
             'ylorrd'
                 ]
 
-        self._linspace = namedtuple('LinearSpace', ['start', 'stop', 'n_points'])
+        self._linspace = namedtuple(
+            'LinearSpace', ['start', 'stop', 'n_points']
+            )
         
 
     def __preprocess_targets__(self, Y_raw):
@@ -705,7 +707,7 @@ class DirichletGPClassifier(BayesianEstimator):
 
     def __validate_priors__(self):
         if self.means is None:
-            warnings.warn((
+            warn((
                 "Mean function not explicitly specified. A centered "
                 "parameterization will be used"
             ))
@@ -716,8 +718,8 @@ class DirichletGPClassifier(BayesianEstimator):
         if len(self.means) != self._n_classes:
             raise ValueError((
                 "Mean must be a sequence of length 1 on exactly match the "
-                "number of unique classes. Saw {self._n_classes)} classes "
-                "but received {len(self.means)} mean instead instead"
+                f"number of unique classes. Saw {self._n_classes} classes "
+                f"but received {len(self.means)} mean instead instead"
             ))
         if self.lengthscales is None:
             raise ValueError((
@@ -813,11 +815,13 @@ class DirichletGPClassifier(BayesianEstimator):
             N,M = train_inputs.shape.eval()
             self._n_inputs=M
             for id, lengthscale, mean in zip(
-                self._classes, self.lengthscales, self.means, strict=True
+                self._classes, self.lengthscales, 
+                self.means, strict=True
                 ):
                 ℓ = lengthscale.dist(
                     lengthscale.name, *lengthscale.dist_args, 
-                    **lengthscale.dist_kwargs, shape = (self._n_inputs,)
+                    **lengthscale.dist_kwargs, 
+                    shape = (self._n_inputs,)
                 )
                 κ_se = pymc.gp.cov.ExpQuad(self._n_inputs, ls=ℓ )
                 κ = κ_se
