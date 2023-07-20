@@ -36,6 +36,7 @@ dependencies = [
 	"arviz",
     "screeninfo",
     "bayesian-models",
+    "more-itertools"
 ]
 
 [project.optional-dependencies]
