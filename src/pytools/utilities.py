@@ -141,33 +141,36 @@ def numpy_replace(arr:np.typing.NDArray, mapping:dict)->np.typing.NDArray:
 
 class Pipeline:
     r'''
-        Implementation of :code:`sklearn.make_pipeline` without the final 
-        estimator object
+        Implementation of :code:`sklearn.make_pipeline` without the
+        final estimator object
 
         Object Attributes:
         ==================
 
-            - | *steps:tuple[Any] = Processing steps as objects. Must implement
-                the `fit`, `transform` and `fit_transform` methods, per the
-                standardized sklearn API
+            - | *steps:tuple[Any] = Processing steps as objects. Must
+                implement the :code:`fit`, :code:`transform` and
+                :code:`fit_transform` methods, per the standardized
+                sklearn API
             
-            - | _initialized:bool = False := Initialization flag, that ensures
-                that the fit method has been called prior to tranformation
+            - | _initialized:bool = False := Initialization flag, that
+                ensures that the fit method has been called prior to
+                transformation
 
         Object Methods:
         ===============
 
-            - | transform(array:numpy.typing.NDArray)->np.typing.NDArray := 
-                Apply all preprocessing steps to `array` in the order they 
-                were specified. The `fit` or `fit_transform` methods must 
-                have been called first
+            - | transform(array:numpy.typing.NDArray)->NDArray := Apply
+                all preprocessing steps to `array` in the order they
+                were specified. The `fit` or `fit_transform` methods
+                must have been called first
 
-            - | fit_transform(array:numpy.typing.NDArray) := Fit all estimators
-                and transform the data. Sequencially calls the `fit` and 
-                `tranform` methods from objects specified in `self.steps`
+            - | fit_transform(array:NDArray) := Fit all
+                estimators and transform the data. Sequentially calls
+                the :code:`fit` and :code:`transform` methods from
+                objects specified in :code:`self.steps`
     '''
     def __init__(self, *steps):
-        self.steps:tuple[typing.Callable] = steps
+        self.steps:tuple[Callable] = steps
         self._initialized:bool=False
         
     def transform(self, arr):
