@@ -288,10 +288,15 @@ class SurfaceVisualizer:
                 start=space[0], stop=space[1], n_points=space[2]
                 ) for space in spaces
         ]
+        # replace_targets = (
+        #     self._coords['features'].to_list().index(inputs[0]), 
+        #     self._coords['features'].to_list().index(inputs[1])
+        # )
         replace_targets = (
-            self._coords['features'].to_list().index(inputs[0]), 
-            self._coords['features'].to_list().index(inputs[1])
+            [e for e in self._coords['features']].index(inputs[0]), 
+            [e for e in self._coords['features']].index(inputs[1])
         )
+        
         target_labels_to_indices = [
             self._classes.index(t) for t in targets
             ]
