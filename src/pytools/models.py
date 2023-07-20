@@ -941,52 +941,64 @@ class DirichletGPClassifier(BayesianEstimator):
                     points to predict on
 
                 - | *args:tuple := Arbitrary positional arguments to be
-                    forwared to `pymc.sample_posterior_predictive`
+                    forwared to :code:`pymc.sample_posterior_predictive`
 
                 - | **kwargs:dict[str,Any] := Arbitrary keyword
                     arguments to be forwared to
-                    `pymc.sample_posterior_predictive`
+                    :code:`pymc.sample_posterior_predictive`
                 
-                - | verbosity_level:int=0 := Select if common post
-                    processing tasks are to be performed on the
-                    posterior samples. Acceptable levels are:
+                - | verbosity:str='full_posterior' := Select if
+                    common post processing operations are to be
+                    performed on the posterior samples. Accepted values
+                    are:
 
-                    - 2 := Return unprocessed inference data as an
-                      `xarray.DataSet`
+                    - 'full_trace' := Return unprocessed inference data
+                      as an `xarray.DataSet`. Exactly what :code:`pymc.sample_posterior_predictive` returns
 
-                    - | 1 := Stack the chain and draw dimensions and
+                    - | 'predictive_dist' := Basic prost processing
+                        only. Stack the chain and draw dimensions and
                         return the `posterior_predictive` group only
 
-                    - | 0 := Return categorical labels as they appeared
-                        in the unprocess dataframe (i.e with their
-                        string labels)
+                    - | 'point_predictions' := Return categorical labels
+                        as they appeared in the unprocess dataframe (i.e
+                        with their string labels)
 
             Returns:
             ========
 
             Data structure returned varies with the value of
-            `verbosity_level`
+            :code:`verbosity_level`
 
-            - | preds:arviz.InferneceData := If `verbosity_level=2`.
-                Full posterior predictive samples, as returned by
-                `pymc.sample_posterior_predictive`
+            - | trace:arviz.InferneceData := If
+                :code:`verbosity_level='full_trace'` the full posterior
+                predictive samples, as returned by
+                :code:`pymc.sample_posterior_predictive`
             
-            - | preds:xarray.DataSet := If `verbosity_leve=1`. Return
+            - | predictive_dist:xarray.DataSet := If
+                :code:`verbosity_leve='predictive_dist'`. Return
                 posterior predictive dataset with the `chain` and `draw`
-                dimensions stacked into a new `sample` dimension
+                dimensions stacked into a new `sample` dimension.
 
-            - | preds:pandas.DataFrame := If `verbosity_level=0`. Return
-                a DataFrame with the predicted labels only. Indexers and
+            - | point_preds:pandas.DataFrame := If
+                :code:`verbosity_level='point_predictions'`. Return a
+                DataFrame with the predicted labels only. Indexers and
                 labels are infered from the supplied training data
 
             Raises:
             =======
 
-                - RuntimeError := If the `_trained` or `_intialized`
-                  sentinels are False
+                - | RuntimeError := If the `_trained` or `_intialized`
+                    sentinels are False
+                    
+                - | ValueError := If passed value of 'verbosity_level'
+                    is not one of 'full_trace', predictive_dist or
+                    'point_predictions'
+                  
+                  
         '''
         verbosity_choices:tuple[str,...] = (
-            'full_trace', "predictive_dist", "point_predictions"
+            'full_trace', "predictive_dist", "point_predictions",
+            "full_posterior"
             )
         self.__raise_any__()
         if verbosity not in verbosity_choices:
@@ -996,8 +1008,14 @@ class DirichletGPClassifier(BayesianEstimator):
                 ))
         with self.model:
             pm.set_data(dict(inputs=self.__preprocess_features__(Xnew, transform_only=True) ))
-            self.trace = pm.sample_posterior_predictive(self.idata, *args, **kwargs)
-        if verbosity == "full_trace":
+            self.trace = pm.sample_posterior_predictive(
+                self.idata, *args, **kwargs
+                )
+        # BUG! When attempting to generate labels manually from the 
+        # posterior predictive, (i.e. sample for the pymc.draw API) the
+        # results are considerably worse (in terms of accuracy) than
+        # letting the graph sample. This should be investigated further
+        if verbosity == "full_trace" or verbosity=="full_posterior":
             return self.trace
         elif verbosity == 'predictive_dist':
             return self.trace.stack(sample=("chain", "draw")).posterior_predictive
