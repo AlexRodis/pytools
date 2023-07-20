@@ -582,8 +582,8 @@ def jointly_discard_nan(*arrs, return_arrays:bool=False)->Union[tuple[pd.DataFra
        
        Warns:
        ======
-           - If resulting index intersection is empty (no common, non-nan)
-           elements between all arrays
+           - | If resulting index intersection is empty (no common,
+           non-nan) elements between all arrays
            
        Raises:
        ------
