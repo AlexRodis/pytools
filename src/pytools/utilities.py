@@ -12,20 +12,31 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-# This module contains additional math functions and definitions, mostly
-# related to neural network activations / transfer functions.
-# The following functions are implemented:
-# - ReLu := Rectified Linear Units, parametric or Leaky
-# - ELU
-# - | SWISS := The swiss activation function, with fixed non learnable
-#     parameter. More accuratly "SWISS-1"
-# - GELU 
-# - SiLU
+# General utilities  module. Contains various tools to be used as 
+# standalone functions and classes. The following are defined here:
+#
+# - matrix_meshgrid := Create a meshgrid in the shape of a 2D array, the
+#   way it is commonly expertly in machine learning models 
+# - numpy_replace := `pandas.DataFrame.replace` like functionality for
+#   for numpy arrays
+# - Pipeline := sklearn make_pipeline functionality, without the final
+#   estimator. Useful for data preprocessing tasks
+# - unfold_grid := Utility for generating argument search grids
+# - render_df := Pandas utility to render dataframes to HTML
+# - full_display := Fully display all dataframes
+# - reset_display := Revert dataframe displays to defaults
+# - full_display_once := Full render a dataframe once per call
+# - add_row := Add a row to an existing dataframe
+# - save := Save arbitrary objects to a file
+# - load := Load arbitrary objects from a file
+# - value_counts := Return a dataframe counting unique values per column
+# - invert_dict := Return a new dictionary with keys and values reversed
+# - jointly_discard_nan := Discard all rows that have missing values
+#   across all dataframes
 
 from pytools.typing import NDArray, FloatArray
 import typing
 from typing import Optional, Callable, Iterable, Sequence, Union, Any
-from typing import Hashable, Iterator
 from pytools.typing import Collection, CollectionClasses
 import numpy as np
 import pandas as pd

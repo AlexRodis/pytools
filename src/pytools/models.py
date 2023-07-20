@@ -12,15 +12,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-# This module contains additional math functions and definitions, mostly
-# related to neural network activations / transfer functions.
-# The following functions are implemented:
-# - ReLu := Rectified Linear Units, parametric or Leaky
-# - ELU
-# - | SWISS := The swiss activation function, with fixed non learnable
-#     parameter. More accuratly "SWISS-1"
-# - GELU 
-# - SiLU
+# This module contains custom model definitions to maximize reusability.
+# These may eventually be moved to the `bayesian-models` library. The 
+# following are defined here:
+#
+# - BayesianModel := Meta model protocol
+# - | DirichletGPClassifier := Novel GP classifier based on the Dirichlet
+#     distribution as a likelihood
 
 import pymc as pm, pymc
 import arviz as az

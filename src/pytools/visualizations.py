@@ -12,15 +12,12 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-# This module contains additional math functions and definitions, mostly
-# related to neural network activations / transfer functions.
-# The following functions are implemented:
-# - ReLu := Rectified Linear Units, parametric or Leaky
-# - ELU
-# - | SWISS := The swiss activation function, with fixed non learnable
-#     parameter. More accuratly "SWISS-1"
-# - GELU 
-# - SiLU
+# This module contains utilities for visualizations:
+#
+# - ResponseSurfaceVisualizer := Visualize multivariate output models
+#   as multiple response surfaces in a 3D graph 
+# - ContourSurfaceVisualizer := Visualize multivariate output models
+#   as a 2D contour plot
 
 from dataclasses import dataclass, field
 from .typing import NDArray

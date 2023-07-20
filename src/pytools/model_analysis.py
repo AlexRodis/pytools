@@ -17,8 +17,9 @@
 # a vector of 1s (feature persists) and 0s (feature is removed). We seek to
 # find the vector with the smallest number of 1s. Utilities defined here
 # all implement difference ways of generating candidate vectors:
+#
 #   - | CartesiaMasking := Generate all possible vectors of 1s and 0s.
-#       becomes extremelly large as the number of features increases
+#       becomes extremely large as the number of features increases
 #   - | CombinatorialMasking := All possible ways to mask K features.
 #   - | SingleMasking := All possible ways to mask a single feature
 #   -   at a time
@@ -26,7 +27,7 @@
 #   -   masking
 #   - | RandomCombinatorialMasking := Generate a random subset of
 #   -   of the full Combinatorial masking for K features 
-
+# NOTE: This module is poorly tested and needs more work
 
 import typing
 import random
@@ -55,11 +56,11 @@ class RandomSampleGenerator:
             - population:Sequence := The population to sample from
             
             - | counts:Sequence[int]:= population-length sequence of
-                positive integers signaling possible repeats per population
-                element. Optional
+                positive integers signaling possible repeats per
+                population element. Optional
             
-            - | k:int=1 := Possitive integer indicating the length of each
-                sample
+            - | k:int=1 := Positive integer indicating the length of
+                each sample
         
         Methods:
         =========
