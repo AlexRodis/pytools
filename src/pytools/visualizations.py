@@ -42,18 +42,18 @@ class SurfaceVisualizer:
             - | model:pycm.Model := The model object
 
             - | var_name:str="α_star" := Alias of the variable to
-                visualize. Optional. Defaults to :code:`"α_star"`
-                for the :code:`DirichletGPClassifier`
+                visualize. Optional. Defaults to :code:`"α_star"` for
+                the :code:`DirichletGPClassifier`
 
             - | grid_space:tuple[tuple[float,float,int],
-                tuple[float,float,int]]=((0,1,50)(0,1,50)) := The
-                space over which to generate a meshgrid for model
-                evaluations. Is a length 2 tuple, whose elements
-                are length 3 tuples, specifying linear spaces for
-                for a pair of features. Linear spaces are given
-                in the form :code:`(start:float,stop:float, n_points:int)`.
+                tuple[float,float,int]]=((0,1,50)(0,1,50)) := The space
+                over which to generate a meshgrid for model evaluations.
+                Is a length 2 tuple, whose elements are length 3 tuples,
+                specifying linear spaces for for a pair of features.
+                Linear spaces are given in the form
+                :code:`(start:float,stop:float, n_points:int)`.
                 :code:`n_points` must be a positive integer. Optional.
-                Defaults to a uniform grid in the space 
+                Defaults to a uniform grid in the space
                 :math:`[0,1]\times [0,1]` with size :math:`50\times 50`.
 
             - | feature_labels:Sequence[str] := A sequence of strings
@@ -62,45 +62,47 @@ class SurfaceVisualizer:
 
             - | predictor_labels:Sequence[str] := A sequence of strings,
                 specifying coordinate labels for model output variable.
-                Length must exactly match the second axis of the variable
-                specified
+                Length must exactly match the second axis of the
+                variable specified
 
             - | placeholder_vals:np.typing.NDArray[float] := Values used
-                to pad the grid features other than those depicted. Possible
-                use cases are zeros of the mean of the feature. Must be a
-                vector whose length match the second dimension of the data
+                to pad the grid features other than those depicted.
+                Possible use cases are zeros of the mean of the feature.
+                Must be a vector whose length match the second dimension
+                of the data
 
-            - | colormaps:Optional[Sequence[str]] := A sequence of strings
-                which are named plotly color scales to be used in the 
-                visualization. Any missing values will set to defaults. Any
-                additional values are ignored
+            - | colormaps:Optional[Sequence[str]] := A sequence of
+                strings which are named plotly color scales to be used
+                in the visualization. Any missing values will set to
+                defaults. Any additional values are ignored
 
-            - | smoothing:Optional[list[float,float]]=None := A length 2 
+            - | smoothing:Optional[list[float,float]]=None := A length 2
                 sequence of floats, specifying the gaussian smoothing
-                parameters 'sigma'. Optional. If :code:`None`, no smoothing
-                is applied. Otherwise, gaussian smoothing with the specified
-                sigmas is applied
+                parameters 'sigma'. Optional. If :code:`None`, no
+                smoothing is applied. Otherwise, gaussian smoothing with
+                the specified sigmas is applied
 
-            - | scaling_factor:float=.8 := Plot size scaling factor. Relative
-                to user display. Optional and defaults to .8
+            - | scaling_factor:float=.8 := Plot size scaling factor.
+                Relative to user display. Optional and defaults to .8
 
-            - | colorbar_spacing_factor:float=.05 := Factor that controls the
-                spacing between the plots' colorbars. Optional and defaults to
-                .05
+            - | colorbar_spacing_factor:float=.05 := Factor that
+                controls the spacing between the plots' colorbars.
+                Optional and defaults to .05
 
-            - | colorbar_location:float=1. := Location for colorbar placement.
-                Optional and defaults to 1
+            - | colorbar_location:float=1. := Location for colorbar
+                placement. Optional and defaults to 1
 
-            - | adaptable_z_axis:bool=True := Controls is the size if of the z
-                axis should be set according to data. If :code:`False`, axis
-                is given proability boundaries at [0,1] regardless of the data
+            - | adaptable_z_axis:bool=True := Controls is the size if of
+                the z axis should be set according to data. If
+                :code:`False`, axis is given proability boundaries at
+                [0,1] regardless of the data
 
-            - | autoshow:bool=False := If :code:`True` automatically call the
-                :code:`plotly.Figure` object's :code:`show` method to render
-                the figure
+            - | autoshow:bool=False := If :code:`True` automatically
+                call the :code:`plotly.Figure` object's :code:`show`
+                method to render the figure
 
-            - | layout:dict[str,Any] := A plot layout dictionary. Optional.
-                Allows overriding of default titles, names etc
+            - | layout:dict[str,Any] := A plot layout dictionary.
+                Optional. Allows overriding of default titles, names etc
         
     '''
     model :typing.Optional[typing.Any] = field(default=None)
