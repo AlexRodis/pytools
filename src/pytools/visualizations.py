@@ -644,6 +644,7 @@ class ResponseSurfaceVisualizer(SurfaceVisualizer):
         
             from pytools.visualizations import ResponseSurfaceVisualizer
         
+            # Initialize the visualization
             vizer = ResponseSurfaceVisualizer(
                     model = obj, 
                     var_name = "α_star",
@@ -663,6 +664,17 @@ class ResponseSurfaceVisualizer(SurfaceVisualizer):
                     adaptable_zaxis = False,
                     autoshow=False
                 )
+            # Call the visualizer with output coordinate names to plot
+            fig=vizer(
+                ["banana", "lentil", "orange", "maize", "watermelon"], 
+                [df.columns[0],df.columns[2]] 
+            )
+            # Trace is cached. Changing output variables doesn't require
+            # sampling the posterior predictive again
+            fig=vizer(
+                ["banana", "lentil", "mugbeans"], 
+                [df.columns[0],df.columns[2]] 
+            )
                 
         Object Public Attributes:
         ===========================
@@ -721,7 +733,6 @@ class ResponseSurfaceVisualizer(SurfaceVisualizer):
                 :code:`True` the range of the axis will be infered from
                 the data. If :code:`False` the axis range will be set to
                 [0,1] regardless of the data. Optional. Defaults to :code:`False`
-                
                             
             - autoshow:bool=False := If :code:`True` automatically calls
               the plotly method :code:`plotly.graph_objects.Figure.show`
@@ -804,6 +815,97 @@ class ContourSurfaceVisualizer(SurfaceVisualizer):
     r'''
         Create a contour plot visualization for multidimensional
         model variables.
+        
+        Create possibly multiple overlappnig contour plots of output
+        variable dimensions against a pair of features
+        
+        Example usage:
+        .. code-block:: Python 3
+            # Initialize the visualizer object with it's various options
+            vizer = ContourSurfaceVisualizer(
+                model = obj, 
+                var_name = "α_star",
+                smoothing = [2,2],
+                grid = ((0,1,50),(0,1,50) ),
+                placeholder_vals = X_train.values.mean(axis=0),
+                feature_labels=  X_train.columns,
+                predictor_labels = obj._classes,
+                colormaps = ['viridis', 'magma', 'tealrose', "inferno", "greens"],
+                scaling_factor = .8,
+                colorbar_spacing_factor= .05,
+                colorbar_location = 1,
+                opacity=.3,
+                layout = dict(),
+                autoshow=True
+            )
+            # Call the visualizer with model output coordinates to plot
+            fig=vizer(
+                ["banana", "lentil", "orange", "maize", "watermelon"], 
+                [df.columns[0],df.columns[2]]   
+            )
+            # Changing output coordinates to plot does not required
+            # sampling the posterior predictive anew
+            fig=vizer(
+                ["banana", "mugbeans"], 
+                [df.columns[0],df.columns[2]]   
+            )
+                        
+        Object Public Attributes:
+        ===========================
+        
+            - | model:pytools.BayesianModel := The trained model to
+                visualize
+            
+            - | var_name:str := The name of the variable to plot as a 
+                response. Optional and defaults to "α_star".
+                
+            - | smoothing:Optional[[int,int]]=None := Selects the sigmas
+                for gaussian filter smoothing. If :code:`None` no
+                smoothing will be applied. Otherwise a supply a length-2
+                list of positive integers, which are the sigmas for the
+                filter
+                
+            - | grid:Iterable[Iterable[int,int,int],
+                Iterable[int,int,int]] := Specification for the
+                evaluation grid to generate. Is a length 2
+                :code:`Iterable` whose elements correspond to the two dimensions on the grid. For each dimension a length 3
+                :code:`Sequence` must be supplied of the format 
+                :code:`start, stop, n_points`.
+                
+            - | placeholder_vars:numpy.NDArray := A feature length
+                vector corresponding to the fixed values which all other
+                features, other than the ones plotted will be fixed to.
+            
+            - | feature_labels:Iterable[str,str] := A length-2
+                :code:`Iterable` with the labels for two feature
+                dimensions
+                  
+            - | predictor_labels:Sequence := A sequence of labels for
+                surfaces to plot
+                
+            - | colormaps:Iterable[str]:= A sequence of named
+                :code:`plotly` colorscales to be used for plotting
+                surfaces. Any missing ones will be replaced by defaults,
+                while any excess ones will be ignored. Optional
+                
+            - | scaling_factor:float=.8 := General rescaling factor,
+                relative to user monitor. Optional and defaults to 1
+                (full screen). Optional.
+                
+            - | colorbar_spacing_factor:float := Controls the whitespace
+                between the response surfaces colorbars
+                
+            - | colorbar_location:float := Shift location of the
+                colorbars as defined by :code:`plotly`. Optional.
+                
+            - | layout:dict := Additional plot layout arguments to be
+                forwarded to
+                :code:`ploty.graph_objects.Figure.update_layout`.
+                Optional. Defaults to an empty dict.
+                                          
+            - autoshow:bool=False := If :code:`True` automatically calls
+              the plotly method :code:`plotly.graph_objects.Figure.show`
+              method. Optional. Defaults to :code:`False`.
     '''
 
     opacity:float = 1.
