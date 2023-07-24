@@ -46,6 +46,7 @@ DEV = [
     "pytest",
     "jax[cuda12_pip]",
     "numpyro",
+    "myst-parser",
     
 ]
 
