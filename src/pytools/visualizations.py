@@ -640,7 +640,7 @@ class ResponseSurfaceVisualizer(SurfaceVisualizer):
         
         Example usage:
         
-        .. code:: Python 3
+        .. code-block:: Python3
         
             from pytools.visualizations import ResponseSurfaceVisualizer
         
@@ -656,7 +656,7 @@ class ResponseSurfaceVisualizer(SurfaceVisualizer):
                     colormaps = [
                         'viridis', 'magma', 'tealrose', 
                         "inferno", "blues"
-                        ]
+                        ],
                     scaling_factor = .8,
                     colorbar_spacing_factor= .05,
                     colorbar_location = .8,
@@ -820,7 +820,8 @@ class ContourSurfaceVisualizer(SurfaceVisualizer):
         variable dimensions against a pair of features
         
         Example usage:
-        .. code-block:: Python 3
+        .. code-block:: Python3
+        
             # Initialize the visualizer object with it's various options
             vizer = ContourSurfaceVisualizer(
                 model = obj, 

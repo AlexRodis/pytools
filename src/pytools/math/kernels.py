@@ -30,66 +30,70 @@ import typing
 
 class MultiLayerPerceptronKernel(Covariance):
     '''
-        Multi layer Perceptron Kernel a.k.a Arcsine Kernel in 
+        Multi layer Perceptron Kernel a.k.a Arcsine Kernel in
         :code:`pymc` and the :code:`pytensor` backend.
 
-        A single layer perceptor is a Gaussian Process, whose
-        kernel(s) were derived by Williams in [INSERT REF HERE]i
+        A single layer perceptron is a Gaussian Process, whose kernel(s)
+        were derived by Williams in `Computing with infinite neural
+        networks
+        <https://proceedings.neurips.cc/paper_files/paper/1996/file/ae5e3ce40e0404a45ecacaaf05e5f735-Paper.pdf>`_
 
         The commonly called "Multi Layer Perceptron Kernel" is a
-        simplified implementation of this kernel. The resulting
-        GP is equivalent to a single layer perceptron with the
-        standard logistic function as its response function.
+        simplified implementation of this kernel. The resulting GP is
+        equivalent to a single layer perceptron with the standard
+        logistic function as its response function.
 
         .. math::
 
-          k(x,y) = \\sigma^{2}\\frac{2}{\\pi }  \\text{asin} \\left
-          ( \\frac{ \\sigma_w^2 x^\\top y+\\sigma_b^2}{\\sqrt{
-            \\sigma_w^2x^\\top x +\\sigma_b^2 + 1}\\sqrt{\\sigma_w^2 
+          k(x,y) = \\sigma^{2}\\frac{2}{\\pi }  \\text{asin} \\left (
+          \\frac{ \\sigma_w^2 x^\\top y+\\sigma_b^2}{\\sqrt{
+            \\sigma_w^2x^\\top x +\\sigma_b^2 + 1}\\sqrt{\\sigma_w^2
             y^\\top y + \\sigma_b^2 +1}} \\right )
           
-        NOTE:
-        =====
-        Implementation is a direct port of the GPy implementation
-        of the same kernel. Automatic Relevance Determination (ARD)
-        not implemented
+        .. note::
+        
+            Implementation is a direct port of the GPy implementation of
+            the same kernel. Automatic Relevance Determination (ARD) not
+            implemented
 
         .. math::
         
         Attributes:
         ------------
 
-            - | input_dims:int=1 := The number of input dimensions (columns)
-                used for Covariance computations. Defaults to 1 (use the first 
-                column only).
+            - | input_dims:int=1 := The number of input dimensions
+                (columns) used for Covariance computations. Defaults to
+                1 (use the first column only).
 
-            - | active_dims:Optional[list[int]]=None := None or array-like 
-                specifying which input dimensions will be used in computing the 
-                covariance matrix. Can be specified as a boolean vector or a 
-                vector of indices. Optional. Defaults to None, and the first
-                `input_dims` columns are selected.
+            - | active_dims:Optional[list[int]]=None := None or
+                array-like specifying which input dimensions will be
+                used in computing the covariance matrix. Can be
+                specified as a boolean vector or a vector of indices.
+                Optional. Defaults to None, and the first `input_dims`
+                columns are selected.
 
-            - | variance:Optional[float] := The output kernel variance scaling 
-                parameter, usually denoted `\eta`. Defaults to 1.0. Must be 
-                positive.
+            - | variance:Optional[float] := The output kernel variance
+                scaling parameter, usually denoted `\eta`. Defaults to
+                1.0. Must be positive.
 
-            - | weight_variance:Optional[Union[float, 
-                np.typing.NDArray[float]]]=1.0. The variance of the weight in the 
-                A.N.N. Can be specified as either a scalar or a matrix of 
-                appropriate size (same as the first input matrix). Optional.  
-                Defaults to 1.0.
+            - | weight_variance:Optional[Union[float,
+                np.typing.NDArray[float]]]=1.0. The variance of the
+                weight in the A.N.N. Can be specified as either a scalar
+                or a matrix of appropriate size (same as the first input
+                matrix). Optional. Defaults to 1.0.
 
-            - | bias_variance:Optional[Union[float, 
-                np.typing.NDArray[float]]]=1.0. The variance of the biases in the 
-                A.N.N. Can be either a scalar or a matrix of appropriate size. 
-                When computing covariance matrices (single input) must be a 
-                N-length vector of biases for a `N \times M` input matrix. When 
-                computing cross-covariance matrices, must be an `N \times N` 
+            - | bias_variance:Optional[Union[float,
+                np.typing.NDArray[float]]]=1.0. The variance of the
+                biases in the A.N.N. Can be either a scalar or a matrix
+                of appropriate size. When computing covariance matrices
+                (single input) must be a N-length vector of biases for a
+                `N \times M` input matrix. When computing
+                cross-covariance matrices, must be an `N \times N`
                 matrix. Optional.  Defaults to 1.0.
 
-            - | ARD:bool=False := A(utomatic)R(elevance)D(etermination) flag. 
-                Unused and raises an error if switched. Optional. Defaults to 
-                :code:`False`.
+            - | ARD:bool=False := A(utomatic)R(elevance)D(etermination)
+                flag. Unused and raises an error if switched. Optional.
+                Defaults to :code:`False`.
 
         Methods:
         -------
@@ -97,15 +101,17 @@ class MultiLayerPerceptronKernel(Covariance):
             Public:
             =======
 
-                - | full(X:numpy.ndarray, Y:Optional[numpy.ndarray]) := Computes
-                    and returns the full covariance matrix/kernel (Y=None) or the
-                    cross-covariance matrix (Y=np.ndarray). The latter case is
-                    poorly tested and may be wrong due to numericall stability 
+                - | full(X:numpy.ndarray, Y:Optional[numpy.ndarray]) :=
+                    Computes and returns the full covariance
+                    matrix/kernel (Y=None) or the cross-covariance
+                    matrix (Y=np.ndarray). The latter case is poorly
+                    tested and may be wrong due to numericall stability 
                 
-                - | diag(X:typing.NDArray,Y:Optional[numpy.ndarray]) := Returns 
-                    the diagonal of the covariance matrix (Y=None) or the 
-                    cross-covariance matrix (Y=numpy.ndarray). The letter case is 
-                    poorly tested and may suffer from numerical stability issues.
+                - | diag(X:typing.NDArray,Y:Optional[numpy.ndarray]) :=
+                    Returns the diagonal of the covariance matrix
+                    (Y=None) or the cross-covariance matrix
+                    (Y=numpy.ndarray). The letter case is poorly tested
+                    and may suffer from numerical stability issues.
 
     '''    
     four_over_tau:float = 2./np.pi

@@ -219,16 +219,14 @@ class InputMasking:
             - | iters:int=1 := Utility attribute counting
                 the number of iterations
         
-        WARNING!:
-        =========
-
-            
-        Regardless of implementation details, for every
-        strategies generator, element returned during the first
-        iteration should be a fully unmasked vector of inputs to
-        establish a baseline truth for future metrics. This is to be
-        done even if it conflicts with the strategies' definition, i.e.
-        n_unmasked<total features
+        .. attention::
+        
+            Regardless of implementation details, for every strategies
+            generator, element returned during the first iteration
+            should be a fully unmasked vector of inputs to establish a
+            baseline truth for future metrics. This is to be done even
+            if it conflicts with the strategies' definition, i.e.
+            n_unmasked<total features
             
     '''
     
