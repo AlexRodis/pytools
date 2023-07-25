@@ -180,9 +180,9 @@ class SurfaceVisualizer:
         self._trace_cache_factory = TraceCache
         if self.predictor_labels is None:
             raise ValueError((
-                "`pred_labels` argument must be provided as a list of "
+                "`predictor_labels` argument must be provided as a list of "
                 "string labels for mapping the columns of model "
-                f"predictions. Received {self.pred_labels} instead"
+                f"predictions. Received {self.predictor_labels} instead"
             ))
         self._n_features = len(self.predictor_labels)
             
@@ -339,7 +339,7 @@ class SurfaceVisualizer:
                     classes over N points. N is the product of the
                     number of points across all features (here always
                     2). Columns are named according the scheme
-                    "$\hat{p}_{class_label}$"
+                    :math:\hat{p}_{class_label}
 
 
             
@@ -348,7 +348,7 @@ class SurfaceVisualizer:
         if c_undefined:
             trace = self.model.predict(
                 zarr, var_names=[self.var_name], 
-                verbosity_level=2
+                verbosity='full_posterior'
                 )
             self._3d_cache = self._trace_cache_factory(
                 x_feature = features[0], y_feature = features[1],
